@@ -12,14 +12,9 @@ Subpackages
 .. toctree::
    :maxdepth: 2
 
-   wenet.branchformer
+   wenet.bin
    wenet.cli
    wenet.dataset
-   wenet.efficient_conformer
-   wenet.k2
-   wenet.paraformer
-   wenet.squeezeformer
-   wenet.transducer
-   wenet.transformer
+   wenet.models
+   wenet.text
    wenet.utils
-   wenet.whisper

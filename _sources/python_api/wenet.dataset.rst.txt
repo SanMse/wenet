@@ -6,12 +6,21 @@ wenet.dataset package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   wenet.dataset.deprecated
+
 Submodules
 ----------
 
 .. toctree::
    :maxdepth: 2
 
+   wenet.dataset.datapipes
    wenet.dataset.dataset
    wenet.dataset.kaldi_io
    wenet.dataset.processor

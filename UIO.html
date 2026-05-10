@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Big Data Training: UIO &mdash; wenet  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -100,12 +98,12 @@
            <div itemprop="articleBody">
              
   <section id="big-data-training-uio">
-<h1>Big Data Training: UIO<a class="headerlink" href="#big-data-training-uio" title="Permalink to this heading"></a></h1>
+<h1>Big Data Training: UIO<a class="headerlink" href="#big-data-training-uio" title="Link to this heading"></a></h1>
 <p>In order to support the model training of industrial tens of millions of hours of speech dataset, the data processing
 method UIO (Unified IO) has been updated in WeNet. The document will introduce UIO from the following sections:
 Necessity of upgrading IO mothod, System design of UIO, Validation experiments, Usage of UIO, Q&amp;A.</p>
 <section id="necessity-of-upgrading-io-mothod">
-<h2>Necessity of upgrading IO mothod<a class="headerlink" href="#necessity-of-upgrading-io-mothod" title="Permalink to this heading"></a></h2>
+<h2>Necessity of upgrading IO mothod<a class="headerlink" href="#necessity-of-upgrading-io-mothod" title="Link to this heading"></a></h2>
 <p>The old IO method in WeNet is based on Pytorch’s native Dataset. During training, it need to load all training audio
 paths and correspondingly labels into the memory at one time, then randomly read data. In the case of industrial-grade
 ultra-large-scale data (egs: more than 50,000 hours or 50 million or more audio), this method will cause the training
@@ -117,9 +115,9 @@ data reading speed is greatly reduced.</p></li>
 </ul>
 </section>
 <section id="system-design-of-uio">
-<h2>System design of UIO<a class="headerlink" href="#system-design-of-uio" title="Permalink to this heading"></a></h2>
+<h2>System design of UIO<a class="headerlink" href="#system-design-of-uio" title="Link to this heading"></a></h2>
 <section id="overall-design">
-<h3>Overall design<a class="headerlink" href="#overall-design" title="Permalink to this heading"></a></h3>
+<h3>Overall design<a class="headerlink" href="#overall-design" title="Link to this heading"></a></h3>
 <p>Inspired by the following industrial methods(egs: <a class="reference external" href="https://github.com/webdataset/webdataset">webdataset</a>, <a class="reference external" href="https://www.tensorflow.org/tutorials/load_data/tfrecord">TFRecord</a>),
 WeNet redesigned the IO method. Its core idea is to make the audio and labels of multiple small data(such as 1000 pieces),
 into compressed packets (tar) and read them based on the IterableDataset of Pytorch. The advantages of this method is：</p>
@@ -143,10 +141,10 @@ and label (txt) are stored in a single compressed package in sequence.</p></li>
 </ul>
 </section>
 <section id="chain-io">
-<h3>Chain IO<a class="headerlink" href="#chain-io" title="Permalink to this heading"></a></h3>
+<h3>Chain IO<a class="headerlink" href="#chain-io" title="Link to this heading"></a></h3>
 <p>Inspired by TFRecord chain IO, UIO also adopts chain implementation. In practical use, chain IO is more flexible,
 easier to expand and easier to debug. TFRecord IO example as follows,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">read_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_parse_image_function</span><span class="p">,</span> <span class="n">num_parallel_calls</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
@@ -189,10 +187,10 @@ prefetch to avoid this problem.</p>
 </section>
 </section>
 <section id="validation-experiments">
-<h2>Validation experiments<a class="headerlink" href="#validation-experiments" title="Permalink to this heading"></a></h2>
+<h2>Validation experiments<a class="headerlink" href="#validation-experiments" title="Link to this heading"></a></h2>
 <p>At present, we have verified the accuracy of UIO on aishell (200 hours) and wenetspeech (10000 hours) data respectively.</p>
 <section id="aishell-raw-vs-shard">
-<h3>Aishell(<code class="docutils literal notranslate"><span class="pre">raw</span></code> vs <code class="docutils literal notranslate"><span class="pre">shard</span></code>)<a class="headerlink" href="#aishell-raw-vs-shard" title="Permalink to this heading"></a></h3>
+<h3>Aishell(<code class="docutils literal notranslate"><span class="pre">raw</span></code> vs <code class="docutils literal notranslate"><span class="pre">shard</span></code>)<a class="headerlink" href="#aishell-raw-vs-shard" title="Link to this heading"></a></h3>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -216,7 +214,7 @@ prefetch to avoid this problem.</p>
 </tbody>
 </table></section>
 <section id="wenetspeech-shard">
-<h3>WenetSpeech(<code class="docutils literal notranslate"><span class="pre">shard</span></code>)<a class="headerlink" href="#wenetspeech-shard" title="Permalink to this heading"></a></h3>
+<h3>WenetSpeech(<code class="docutils literal notranslate"><span class="pre">shard</span></code>)<a class="headerlink" href="#wenetspeech-shard" title="Link to this heading"></a></h3>
 <p><img alt="UIO WenetSpeech" src="_images/UIO_wenetspeech_cer.png" /></p>
 <p>WeNet and ESPnet use similar model structure and parameter configuration, and they achieve similar recognition rate,
 which shows the correctness of UIO in WeNet. And during the training, we observed that the overall utilization rate of
@@ -224,7 +222,7 @@ GPU of UIO is more than 80% - 90%, indicating that the overall IO reading effici
 </section>
 </section>
 <section id="usage-of-uio">
-<h2>Usage of UIO<a class="headerlink" href="#usage-of-uio" title="Permalink to this heading"></a></h2>
+<h2>Usage of UIO<a class="headerlink" href="#usage-of-uio" title="Link to this heading"></a></h2>
 <p>For detailed usage of UIO, please refer to the aishell dataset example:
 https://github.com/wenet-e2e/wenet/blob/main/examples/aishell/s0/run.sh
 At present, all datasets in WeNet have used UIO as the default data preparation.</p>
@@ -264,20 +262,20 @@ At present, all datasets in WeNet have used UIO as the default data preparation.
 </div>
 </section>
 <section id="q-a">
-<h2>Q&amp;A<a class="headerlink" href="#q-a" title="Permalink to this heading"></a></h2>
+<h2>Q&amp;A<a class="headerlink" href="#q-a" title="Link to this heading"></a></h2>
 <p>Q1: How to operate distributed partition of training data?</p>
 <p>A: According to rank and num_workers can segment the data. for example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DistributedSampler</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">partition</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DistributedSampler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">partition</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">partition</span> <span class="o">=</span> <span class="n">partition</span>
 
-    <span class="k">def</span> <span class="nf">set_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="n">epoch</span>
 
-    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">partition</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>

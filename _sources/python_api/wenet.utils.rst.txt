@@ -21,9 +21,11 @@ Submodules
    wenet.utils.ctc_utils
    wenet.utils.executor
    wenet.utils.file_utils
-   wenet.utils.init_ali_paraformer
+   wenet.utils.fsdp_utils
+   wenet.utils.init_dataset
    wenet.utils.init_model
    wenet.utils.init_tokenizer
    wenet.utils.mask
+   wenet.utils.rope_utils
    wenet.utils.scheduler
    wenet.utils.train_utils
